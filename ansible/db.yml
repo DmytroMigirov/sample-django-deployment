@@ -1,0 +1,10 @@
+
+---
+- hosts: My_Group
+  roles:
+    - role: postgres-setup
+      become: yes
+
+
+
+
