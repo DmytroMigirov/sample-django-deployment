@@ -1,0 +1,35 @@
+---
+
+- name: "Checking PostgreSQL supported version"
+  ansible.builtin.fail:
+    msg: "Not a supported PostgreSQL version {{ postgresql__version }}"
+  when: ( postgresql__version < 10 ) or ( postgresql__version > 14 )
+
+- name: Ensure all configured locales are present.
+  community.general.locale_gen: 
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ postgresql__locales }}"
+  register: locale_gen_result
+
+- name: "Install Debian based OS"
+  ansible.builtin.include_tasks: install-debian.yml
+  when: ansible_os_family == 'Debian'
+
+- name: "Configure Postgresql"
+  ansible.builtin.include_tasks: configure.yml
+
+- name: Ensure PostgreSQL is started and enabled on boot.
+  ansible.builtin.service:
+    name: postgresql
+    state: started
+    enabled: true
+  when: not postgresql__disable_initdb
+
+
+- name: "Create users"
+  ansible.builtin.include_tasks: create_users.yml
+
+- name: "Manage databases"
+  ansible.builtin.include_tasks: databases.yml
+

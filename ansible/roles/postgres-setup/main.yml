@@ -1,0 +1,19 @@
+---
+
+# Quick-provisioning playbook
+# ---------------------------
+
+# A Simple, straight playbook for quick remote installations.
+# You will be asked which hosts to provision before-hand.
+
+
+- name: 'postgresql'
+
+  vars_prompt:
+    selected_hosts: 54.87.7.13
+
+  hosts: "54.87.7.13"
+
+
+  roles:
+    - '.'    # The current directory itself is the role
