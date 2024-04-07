@@ -19,6 +19,9 @@ resource "aws_launch_configuration" "ec2" {
   systemctl start docker
   systemctl enable docker
   docker run -p 80:3000 ghcr.io/benc-uk/nodejs-demoapp:latest
+  sudo apt-add-repository ppa:ansible/ansible -y
+  sudo apt update -y
+  sudo apt install ansible -y
   EOL
   depends_on = [aws_nat_gateway.terraform-lab-ngw]
   
@@ -32,6 +35,12 @@ resource "aws_instance" "postgres_instance" {
   iam_instance_profile        = aws_iam_instance_profile.session-manager.id
   associate_public_ip_address = false
   subnet_id                   = aws_subnet.private-subnet-1.id
+  user_data = <<-EOL
+  #!/bin/bash -xe
+  apt-add-repository ppa:ansible/ansible -y
+  apt update -y
+  apt install ansible -y
+  EOL
   tags = {
     Name = "PostgresInstance"
   }
