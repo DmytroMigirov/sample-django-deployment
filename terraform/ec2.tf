@@ -1,16 +1,3 @@
-resource "aws_instance" "bastion" {
-  ami                         = lookup(var.amis, var.region)
-  instance_type               = "${var.instance_type}"
-  key_name                    = var.key_name
-  iam_instance_profile        = aws_iam_instance_profile.session-manager.id
-  associate_public_ip_address = true
-  security_groups            = [aws_security_group.ec2.id]
-  subnet_id                   = aws_subnet.public-subnet-1.id
-  tags = {
-    Name = "Bastion"
-  }
-}
-
 #### ec2 ####
 resource "aws_launch_configuration" "ec2" {
   name                        = "${var.ec2_instance_name}-instances-lc"
@@ -46,7 +33,7 @@ resource "aws_instance" "postgres_instance" {
   associate_public_ip_address = false
   subnet_id                   = aws_subnet.private-subnet-1.id
   tags = {
-    Name = "PostgresInstance"  # Замените на нужное вам имя
+    Name = "PostgresInstance"
   }
 }
 
