@@ -7,7 +7,7 @@ postgresql__global_config_options: []
 # postgresql__includeconf:
 # postgresql__hba_entries:
 postgresql__databases: 
-  - {name: testdb,
+  - {name: sample-django,
     lc_collate: 'en_US.UTF-8',
     lc_ctype: 'en_US.UTF-8',
     encoding: 'UTF-8',
@@ -18,7 +18,7 @@ postgresql__databases:
    }
 
 postgresql__users:
-  - {name: "db_user",
+  - {name: "sample-django",
     password: "supersecure",
     encrypted: yes,
     expires: 'infinity',

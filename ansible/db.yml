@@ -1,6 +1,6 @@
 
 ---
-- hosts: My_Group
+- hosts: localhost
   roles:
     - role: postgres-setup
       become: yes

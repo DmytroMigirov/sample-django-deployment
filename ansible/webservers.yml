@@ -1,0 +1,19 @@
+---
+
+- name: Provision application web server
+  hosts: localhost 
+  become: true
+  become_user: root
+  remote_user: "{{ server_user }}"
+  vars_files:
+    - group_vars/development/vars.yml
+  vars:
+    update_apt_cache: true
+  module_defaults:
+    ansible.builtin.apt:
+      force_apt_get: true
+
+  roles:
+    - base
+    - web
+    - nginx
