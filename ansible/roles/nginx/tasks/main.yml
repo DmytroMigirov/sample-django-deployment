@@ -1,0 +1,32 @@
+---
+
+- name: Install Nginx
+  ansible.builtin.apt: name=nginx update_cache={{ update_apt_cache }} state=present
+  tags: packages
+
+- name: Create the Nginx configuration file
+  ansible.builtin.template: src={{ application_name }}.j2
+            dest=/etc/nginx/sites-available/{{ application_name }}
+            backup=yes
+            mode=0644
+  notify: Reload nginx
+
+- name: Ensure that the default site is disabled
+  ansible.builtin.file: path=/etc/nginx/sites-enabled/default state=absent
+  notify: Reload nginx
+
+- name: Ensure that the application site is enabled
+  ansible.builtin.file: src=/etc/nginx/sites-available/{{ application_name }}
+        dest=/etc/nginx/sites-enabled/{{ application_name }}
+        state=link
+  notify: Reload nginx
+
+- name: Ensure Nginx service is started
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: true
+    # TODO: This is likely due to a bug in Ansible.
+    # Remove this line in the future.
+    # See https://github.com/ansible/ansible/issues/75005
+    use: sysvinit
